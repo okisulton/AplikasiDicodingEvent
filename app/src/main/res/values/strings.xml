@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Dicoding Fundamental Android Subsmission</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="home">Home</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="finished">Finished</string>
+    <string name="event_image">Event Image</string>
+    <string name="event_banner_image">Event Banner Image</string>
+    <string name="organizer_icon">Organizer Icon</string>
+    <string name="time_icon">Time Icon</string>
+    <string name="quota_icon">Quota Icon</string>
+    <string name="event_information">Event Information</string>
+    <string name="organizer">Organizer</string>
+    <string name="event_time">Event Time</string>
+    <string name="remaining_quota">Remaining Quota</string>
+    <string name="description">Description</string>
+    <string name="register_event">Register Event</string>
+    <string name="no_finished_events_found">No finished events found</string>
+    <string name="discover_events">Discover Events</string>
+    <string name="find_amazing_events_happening_now">Find amazing events happening now</string>
+    <string name="upcoming_events">Upcoming Events</string>
+    <string name="finished_events">Finished Events</string>
+    <string name="no_upcoming_events_found">No upcoming events found</string>
+    <string name="quota_full">Kuota Full</string>
+</resources>
