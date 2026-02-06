@@ -9,13 +9,11 @@ import com.bumptech.glide.Glide
 import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.EventResponse
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.ItemEventBinding
 
-class EventAdapter : ListAdapter<EventResponse.ListEventsItem, EventAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class EventAdapter(
+    private val onItemClick: ((EventResponse.ListEventsItem) -> Unit)? = null
+) : ListAdapter<EventResponse.ListEventsItem, EventAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
-    private lateinit var onItemClickCallback: OnItemClickCallback
 
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,7 +24,7 @@ class EventAdapter : ListAdapter<EventResponse.ListEventsItem, EventAdapter.MyVi
         val event = getItem(position)
         holder.bind(event)
         holder.itemView.setOnClickListener {
-            onItemClickCallback.onItemClicked(event)
+            onItemClick?.invoke(event)
         }
     }
 
