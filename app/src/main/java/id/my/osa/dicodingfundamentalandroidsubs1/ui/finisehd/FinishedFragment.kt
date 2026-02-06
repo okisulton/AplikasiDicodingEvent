@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.EventResponse
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.FragmentFinishedBinding
 import id.my.osa.dicodingfundamentalandroidsubs1.ui.home.EventVerticalAdapter
 
@@ -40,21 +39,16 @@ class FinishedFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        eventAdapter = EventVerticalAdapter()
+        eventAdapter = EventVerticalAdapter { event ->
+            val action =
+                FinishedFragmentDirections.actionFinishedFragmentToDetailFragment(event.id!!)
+            findNavController().navigate(action)
+        }
 
         binding.rvFinishedEvents.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = eventAdapter
         }
-
-        eventAdapter.setOnItemClickCallback(object : EventVerticalAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: EventResponse.ListEventsItem) {
-                val action = FinishedFragmentDirections.actionFinishedFragmentToDetailFragment(
-                    data.id ?: 0
-                )
-                findNavController().navigate(action)
-            }
-        })
     }
 
     private fun setupSearchView() {

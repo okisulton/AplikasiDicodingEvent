@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.EventResponse
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -46,15 +45,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupBannerSlider() {
-        val bannerAdapter = BannerAdapter()
+        val bannerAdapter = BannerAdapter { event ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id!!)
+            findNavController().navigate(action)
+        }
         binding.vpUpcomingBanner.adapter = bannerAdapter
-
-        bannerAdapter.setOnItemClickCallback(object : BannerAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: EventResponse.ListEventsItem) {
-                val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(data.id!!)
-                findNavController().navigate(action)
-            }
-        })
 
         homeViewModel.bannerEvents.observe(viewLifecycleOwner) { events ->
             bannerAdapter.submitList(events)
@@ -117,19 +112,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUpcomingEvents() {
-        val upcomingEventsAdapter = EventAdapter()
+        val upcomingEventsAdapter = EventAdapter { event ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id!!)
+            findNavController().navigate(action)
+        }
 
         binding.rvUpcomingEvents.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = upcomingEventsAdapter
         }
-
-        upcomingEventsAdapter.setOnItemClickCallback(object : EventAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: EventResponse.ListEventsItem) {
-                val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(data.id!!)
-                findNavController().navigate(action)
-            }
-        })
 
         homeViewModel.upcomingEvents.observe(viewLifecycleOwner) { events ->
             upcomingEventsAdapter.submitList(events)
@@ -142,19 +133,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupFinishedEvents() {
-        val finishedEventsAdapter = EventVerticalAdapter()
+        val finishedEventsAdapter = EventVerticalAdapter { event ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id!!)
+            findNavController().navigate(action)
+        }
 
         binding.rvFinishedEvents.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = finishedEventsAdapter
         }
-
-        finishedEventsAdapter.setOnItemClickCallback(object : EventVerticalAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: EventResponse.ListEventsItem) {
-                val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(data.id!!)
-                findNavController().navigate(action)
-            }
-        })
 
         homeViewModel.finishedEvents.observe(viewLifecycleOwner) { events ->
             finishedEventsAdapter.submitList(events)

@@ -6,8 +6,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import id.my.osa.dicodingfundamentalandroidsubs1.R
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.ActivityMainBinding
 
@@ -32,7 +32,15 @@ class MainActivity : AppCompatActivity() {
         // Hide the action bar
         supportActionBar?.hide()
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        binding.bottomNav.setupWithNavController(navController)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(
+                R.id.nav_host_fragment_content_main
+            ) as NavHostFragment
+
+        NavigationUI.setupWithNavController(
+            binding.bottomNav,
+            navHostFragment.navController
+        )
+
     }
 }
