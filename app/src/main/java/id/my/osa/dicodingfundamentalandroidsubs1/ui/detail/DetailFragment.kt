@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,12 +16,11 @@ import com.bumptech.glide.Glide
 import id.my.osa.dicodingfundamentalandroidsubs1.R
 import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.DetailEventResponse
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.FragmentDetailBinding
-import androidx.core.net.toUri
 
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private val viewModel: DetailViewModel by viewModels()
     private val args: DetailFragmentArgs by navArgs()
@@ -33,7 +33,7 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root ?: throw IllegalStateException("Binding is not initialized")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,8 +47,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-
-        binding.toolbar.setNavigationOnClickListener {
+        binding?.toolbar?.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
     }
@@ -59,7 +58,7 @@ class DetailFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding?.progressBar?.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
@@ -70,62 +69,77 @@ class DetailFragment : Fragment() {
     }
 
     private fun displayEventDetail(event: DetailEventResponse.Event) {
-        with(binding) {
+        binding?.let { b ->
 
             val isShow = true
             var scrollRange = -1
 
-            binding.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            b.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
                 if (scrollRange == -1) {
                     scrollRange = appBarLayout.totalScrollRange
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    binding.collapsingToolbar.title = viewModel.eventDetail.value?.name
+                    binding?.collapsingToolbar?.title = viewModel.eventDetail.value?.name
                 } else if (isShow) {
-                    binding.collapsingToolbar.title = " "
+                    binding?.collapsingToolbar?.title = " "
                 }
             }
 
-            binding.toolbar.setNavigationOnClickListener {
+            b.toolbar.setNavigationOnClickListener {
                 findNavController().navigateUp()
             }
 
 
             Glide.with(requireContext())
                 .load(event.imageLogo)
-                .into(ivEventCover)
+                .into(b.ivEventCover)
 
-            tvEventName.text = event.name
-            tvEventCategory.text = event.category ?: "Event"
+            b.tvEventName.text = event.name
+            b.tvEventCategory.text = event.category ?: "Event"
 
-            tvEventOwner.text = event.ownerName
-            tvEventTime.text = event.beginTime
+            b.tvEventOwner.text = event.ownerName
+            b.tvEventTime.text = event.beginTime
 
             val remainingQuota = (event.quota ?: 0) - (event.registrants ?: 0)
-            tvEventQuota.text = remainingQuota.toString()
+            b.tvEventQuota.text = remainingQuota.toString()
 
             when {
                 remainingQuota <= 0 -> {
-                    tvEventQuota.setTextColor(resources.getColor(android.R.color.holo_red_dark, null))
-                    fabRegister.isEnabled = false
-                    fabRegister.text = getString(R.string.quota_full)
+                    b.tvEventQuota.setTextColor(
+                        resources.getColor(
+                            android.R.color.holo_red_dark,
+                            null
+                        )
+                    )
+                    b.fabRegister.isEnabled = false
+                    b.fabRegister.text = getString(R.string.quota_full)
                 }
                 remainingQuota < 100 -> {
-                    tvEventQuota.setTextColor(resources.getColor(android.R.color.holo_orange_dark, null))
+                    b.tvEventQuota.setTextColor(
+                        resources.getColor(
+                            android.R.color.holo_orange_dark,
+                            null
+                        )
+                    )
                 }
                 else -> {
-                    tvEventQuota.setTextColor(resources.getColor(android.R.color.holo_green_dark, null))
+                    b.tvEventQuota.setTextColor(
+                        resources.getColor(
+                            android.R.color.holo_green_dark,
+                            null
+                        )
+                    )
                 }
             }
 
-            tvEventDescription.text = HtmlCompat.fromHtml(
+            b.tvEventDescription.text = HtmlCompat.fromHtml(
                 event.description ?: "No description available",
                 HtmlCompat.FROM_HTML_MODE_LEGACY
             )
 
             eventLink = event.link
 
-            fabRegister.setOnClickListener {
+            b.fabRegister.setOnClickListener {
                 eventLink?.let { link ->
                     openLinkInBrowser(link)
                 } ?: showToast("Registration link not available")

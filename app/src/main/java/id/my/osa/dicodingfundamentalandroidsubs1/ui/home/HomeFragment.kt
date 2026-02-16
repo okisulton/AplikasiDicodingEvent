@@ -18,7 +18,7 @@ import id.my.osa.dicodingfundamentalandroidsubs1.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private val homeViewModel by viewModels<HomeViewModel>()
 
@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root ?: throw IllegalStateException("Binding is not initialized")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
             val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id!!)
             findNavController().navigate(action)
         }
-        binding.vpUpcomingBanner.adapter = bannerAdapter
+        binding?.vpUpcomingBanner?.adapter = bannerAdapter
 
         homeViewModel.bannerEvents.observe(viewLifecycleOwner) { events ->
             bannerAdapter.submitList(events)
@@ -59,11 +59,12 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.isBannerLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.pbBanner.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding?.pbBanner?.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         // Add page change callback to handle user swipes
-        binding.vpUpcomingBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding?.vpUpcomingBanner?.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 currentPage = position
@@ -90,10 +91,11 @@ class HomeFragment : Fragment() {
     private val autoScrollRunnable = object : Runnable {
         override fun run() {
             if (isAutoScrolling && _binding != null) {
-                val itemCount = (binding.vpUpcomingBanner.adapter as? BannerAdapter)?.itemCount ?: 0
+                val itemCount =
+                    (binding?.vpUpcomingBanner?.adapter as? BannerAdapter)?.itemCount ?: 0
                 if (itemCount > 0) {
                     currentPage = (currentPage + 1) % itemCount
-                    binding.vpUpcomingBanner.setCurrentItem(currentPage, true)
+                    binding?.vpUpcomingBanner?.setCurrentItem(currentPage, true)
                     autoScrollHandler.postDelayed(this, 3000) // 3 seconds
                 }
             }
@@ -117,7 +119,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        binding.rvUpcomingEvents.apply {
+        binding?.rvUpcomingEvents?.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = upcomingEventsAdapter
         }
@@ -127,8 +129,8 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.isUpcomingLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.pbUpcoming.visibility = if (isLoading) View.VISIBLE else View.GONE
-            binding.rvUpcomingEvents.visibility = if (isLoading) View.GONE else View.VISIBLE
+            binding?.pbUpcoming?.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding?.rvUpcomingEvents?.visibility = if (isLoading) View.GONE else View.VISIBLE
         }
     }
 
@@ -138,7 +140,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        binding.rvFinishedEvents.apply {
+        binding?.rvFinishedEvents?.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = finishedEventsAdapter
         }
@@ -148,8 +150,8 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.isFinishedLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.pbFinished.visibility = if (isLoading) View.VISIBLE else View.GONE
-            binding.rvFinishedEvents.visibility = if (isLoading) View.GONE else View.VISIBLE
+            binding?.pbFinished?.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding?.rvFinishedEvents?.visibility = if (isLoading) View.GONE else View.VISIBLE
         }
     }
 
@@ -180,7 +182,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         isAutoScrolling = true
-        val itemCount = (binding.vpUpcomingBanner.adapter as? BannerAdapter)?.itemCount ?: 0
+        val itemCount = (binding?.vpUpcomingBanner?.adapter as? BannerAdapter)?.itemCount ?: 0
         if (itemCount > 1) {
             startAutoScroll(itemCount)
         }

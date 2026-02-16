@@ -1,6 +1,5 @@
 package id.my.osa.dicodingfundamentalandroidsubs1.ui.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -50,14 +49,12 @@ class HomeViewModel : ViewModel() {
                     _bannerEvents.value = response.body()?.listEvents?.take(5)
                 } else {
                     _errorMessage.value = response.message()
-                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isBannerLoading.value = false
                 _errorMessage.value = t.message
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
     }
@@ -72,14 +69,12 @@ class HomeViewModel : ViewModel() {
                     _upcomingEvents.value = response.body()?.listEvents?.take(5)
                 } else {
                     _errorMessage.value = response.message()
-                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isUpcomingLoading.value = false
                 _errorMessage.value = t.message
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
     }
@@ -94,14 +89,12 @@ class HomeViewModel : ViewModel() {
                     _finishedEvents.value = response.body()?.listEvents?.take(5)
                 } else {
                     _errorMessage.value = response.message()
-                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isFinishedLoading.value = false
                 _errorMessage.value = t.message
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
     }

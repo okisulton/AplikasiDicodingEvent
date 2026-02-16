@@ -1,6 +1,5 @@
 package id.my.osa.dicodingfundamentalandroidsubs1.ui.finisehd
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,14 +53,12 @@ class FinishedViewModel : ViewModel() {
                     }
                 } else {
                     _errorMessage.value = "Failed to load events: ${response.message()}"
-                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isLoading.value = false
                 _errorMessage.value = "Network error: ${t.message}"
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
     }
