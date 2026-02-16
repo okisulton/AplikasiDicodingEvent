@@ -28,7 +28,7 @@ class ReminderWorker(
             }
 
             Result.success()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Result.retry()
         }
     }
