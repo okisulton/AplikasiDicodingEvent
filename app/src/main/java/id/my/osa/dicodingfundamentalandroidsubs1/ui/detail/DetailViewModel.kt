@@ -3,16 +3,17 @@ package id.my.osa.dicodingfundamentalandroidsubs1.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.DetailEventResponse
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.retrofit.ApiConfig
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.lifecycle.viewModelScope
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.model.Event
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.usecase.GetEventDetailUseCase
+import kotlinx.coroutines.launch
 
-class DetailViewModel : ViewModel() {
+class DetailViewModel(
+    private val getEventDetailUseCase: GetEventDetailUseCase
+) : ViewModel() {
 
-    private val _eventDetail = MutableLiveData<DetailEventResponse.Event?>()
-    val eventDetail: LiveData<DetailEventResponse.Event?> = _eventDetail
+    private val _eventDetail = MutableLiveData<Event?>()
+    val eventDetail: LiveData<Event?> = _eventDetail
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -22,26 +23,15 @@ class DetailViewModel : ViewModel() {
 
     fun fetchEventDetail(eventId: Int) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getDetailEvent(eventId)
-
-        client.enqueue(object : Callback<DetailEventResponse> {
-            override fun onResponse(
-                call: Call<DetailEventResponse>,
-                response: Response<DetailEventResponse>
-            ) {
+        viewModelScope.launch {
+            try {
+                val event = getEventDetailUseCase(eventId)
+                _eventDetail.value = event
+            } catch (t: Throwable) {
+                _errorMessage.value = "Failed to load event details: ${t.message}"
+            } finally {
                 _isLoading.value = false
-                if (response.isSuccessful) {
-                    _eventDetail.value = response.body()?.event
-                } else {
-                    _errorMessage.value = "Failed to load event details: ${response.message()}"
-                }
             }
-
-            override fun onFailure(call: Call<DetailEventResponse>, t: Throwable) {
-                _isLoading.value = false
-                _errorMessage.value = "Network error: ${t.message}"
-            }
-        })
+        }
     }
 }
-

@@ -3,22 +3,27 @@ package id.my.osa.dicodingfundamentalandroidsubs1.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.EventResponse
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.retrofit.ApiConfig
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.lifecycle.viewModelScope
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.model.Event
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.usecase.GetBannerEventsUseCase
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.usecase.GetFinishedEventsUseCase
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.usecase.GetUpcomingEventsUseCase
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val getBannerEventsUseCase: GetBannerEventsUseCase,
+    private val getUpcomingEventsUseCase: GetUpcomingEventsUseCase,
+    private val getFinishedEventsUseCase: GetFinishedEventsUseCase
+) : ViewModel() {
 
-    private val _upcomingEvents = MutableLiveData<List<EventResponse.ListEventsItem>>()
-    val upcomingEvents: LiveData<List<EventResponse.ListEventsItem>> = _upcomingEvents
+    private val _upcomingEvents = MutableLiveData<List<Event>>()
+    val upcomingEvents: LiveData<List<Event>> = _upcomingEvents
 
-    private val _finishedEvents = MutableLiveData<List<EventResponse.ListEventsItem>>()
-    val finishedEvents: LiveData<List<EventResponse.ListEventsItem>> = _finishedEvents
+    private val _finishedEvents = MutableLiveData<List<Event>>()
+    val finishedEvents: LiveData<List<Event>> = _finishedEvents
 
-    private val _bannerEvents = MutableLiveData<List<EventResponse.ListEventsItem>>()
-    val bannerEvents: LiveData<List<EventResponse.ListEventsItem>> = _bannerEvents
+    private val _bannerEvents = MutableLiveData<List<Event>>()
+    val bannerEvents: LiveData<List<Event>> = _bannerEvents
 
     private val _isBannerLoading = MutableLiveData<Boolean>()
     val isBannerLoading: LiveData<Boolean> = _isBannerLoading
@@ -32,7 +37,6 @@ class HomeViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-
     init {
         findBannerEvents()
         findUpcomingEvents()
@@ -41,62 +45,43 @@ class HomeViewModel : ViewModel() {
 
     private fun findBannerEvents() {
         _isBannerLoading.value = true
-        val client = ApiConfig.getApiService().getEvents( limit = 10)
-        client.enqueue(object : Callback<EventResponse> {
-            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
-                _isBannerLoading.value = false
-                if (response.isSuccessful) {
-                    _bannerEvents.value = response.body()?.listEvents?.take(5)
-                } else {
-                    _errorMessage.value = response.message()
-                }
-            }
-
-            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                _isBannerLoading.value = false
+        viewModelScope.launch {
+            try {
+                val events = getBannerEventsUseCase()
+                _bannerEvents.value = events
+            } catch (t: Throwable) {
                 _errorMessage.value = t.message
+            } finally {
+                _isBannerLoading.value = false
             }
-        })
+        }
     }
 
     private fun findUpcomingEvents() {
         _isUpcomingLoading.value = true
-        val client = ApiConfig.getApiService().getEvents(1, limit = 5)
-        client.enqueue(object : Callback<EventResponse> {
-            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
-                _isUpcomingLoading.value = false
-                if (response.isSuccessful) {
-                    _upcomingEvents.value = response.body()?.listEvents?.take(5)
-                } else {
-                    _errorMessage.value = response.message()
-                }
-            }
-
-            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                _isUpcomingLoading.value = false
+        viewModelScope.launch {
+            try {
+                val events = getUpcomingEventsUseCase()
+                _upcomingEvents.value = events.take(5)
+            } catch (t: Throwable) {
                 _errorMessage.value = t.message
+            } finally {
+                _isUpcomingLoading.value = false
             }
-        })
+        }
     }
 
     private fun findFinishedEvents() {
         _isFinishedLoading.value = true
-        val client = ApiConfig.getApiService().getEvents(0, limit = 5)
-        client.enqueue(object : Callback<EventResponse> {
-            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
-                _isFinishedLoading.value = false
-                if (response.isSuccessful) {
-                    _finishedEvents.value = response.body()?.listEvents?.take(5)
-                } else {
-                    _errorMessage.value = response.message()
-                }
-            }
-
-            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                _isFinishedLoading.value = false
+        viewModelScope.launch {
+            try {
+                val events = getFinishedEventsUseCase()
+                _finishedEvents.value = events.take(5)
+            } catch (t: Throwable) {
                 _errorMessage.value = t.message
+            } finally {
+                _isFinishedLoading.value = false
             }
-        })
+        }
     }
 }
-

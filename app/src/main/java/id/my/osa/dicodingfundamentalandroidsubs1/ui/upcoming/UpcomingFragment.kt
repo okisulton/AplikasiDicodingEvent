@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.FragmentUpcomingBinding
+import id.my.osa.dicodingfundamentalandroidsubs1.ui.ViewModelFactory
 import id.my.osa.dicodingfundamentalandroidsubs1.ui.home.EventVerticalAdapter
 
 class UpcomingFragment : Fragment() {
@@ -18,7 +19,7 @@ class UpcomingFragment : Fragment() {
     private var _binding: FragmentUpcomingBinding? = null
     private val binding get() = _binding
 
-    private val viewModel: UpcomingViewModel by viewModels()
+    private val viewModel: UpcomingViewModel by viewModels { ViewModelFactory() }
     private var eventAdapter: EventVerticalAdapter? = null
 
     override fun onCreateView(
@@ -41,9 +42,8 @@ class UpcomingFragment : Fragment() {
     private fun setupRecyclerView() {
         eventAdapter = EventVerticalAdapter { event ->
             val action =
-                UpcomingFragmentDirections.actionUpcomingFragmentToDetailFragment(event.id!!)
+                UpcomingFragmentDirections.actionUpcomingFragmentToDetailFragment(event.id)
             findNavController().navigate(action)
-
         }
 
         binding?.rvUpcomingEvents?.apply {
@@ -107,5 +107,3 @@ class UpcomingFragment : Fragment() {
         _binding = null
     }
 }
-
-

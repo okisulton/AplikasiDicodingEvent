@@ -6,14 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.EventResponse
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.model.Event
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.ItemEventBinding
 
 class EventAdapter(
-    private val onItemClick: ((EventResponse.ListEventsItem) -> Unit)? = null
-) : ListAdapter<EventResponse.ListEventsItem, EventAdapter.MyViewHolder>(DIFF_CALLBACK) {
-
-
+    private val onItemClick: ((Event) -> Unit)? = null
+) : ListAdapter<Event, EventAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,7 +27,7 @@ class EventAdapter(
     }
 
     class MyViewHolder(private val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(event: EventResponse.ListEventsItem) {
+        fun bind(event: Event) {
             binding.tvEventName.text = event.name
             Glide.with(binding.root.context)
                 .load(event.imageLogo)
@@ -38,16 +36,16 @@ class EventAdapter(
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: EventResponse.ListEventsItem)
+        fun onItemClicked(data: Event)
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventResponse.ListEventsItem>() {
-            override fun areItemsTheSame(oldItem: EventResponse.ListEventsItem, newItem: EventResponse.ListEventsItem): Boolean {
-                return oldItem == newItem
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Event>() {
+            override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
+                return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: EventResponse.ListEventsItem, newItem: EventResponse.ListEventsItem): Boolean {
+            override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean {
                 return oldItem == newItem
             }
         }

@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.EventResponse
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.model.Event
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.ItemBannerEventBinding
+
 class BannerAdapter(
-    private val onItemClick: ((EventResponse.ListEventsItem) -> Unit)? = null
-) : ListAdapter<EventResponse.ListEventsItem, BannerAdapter.BannerViewHolder>(DIFF_CALLBACK) {
+    private val onItemClick: ((Event) -> Unit)? = null
+) : ListAdapter<Event, BannerAdapter.BannerViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannerViewHolder {
         val binding = ItemBannerEventBinding.inflate(
@@ -33,7 +34,7 @@ class BannerAdapter(
         private val binding: ItemBannerEventBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(event: EventResponse.ListEventsItem) {
+        fun bind(event: Event) {
             binding.tvBannerEventName.text = event.name
             binding.tvBannerEventOwner.text = event.ownerName
             Glide.with(binding.root.context)
@@ -44,11 +45,11 @@ class BannerAdapter(
 
     companion object {
         val DIFF_CALLBACK =
-            object : DiffUtil.ItemCallback<EventResponse.ListEventsItem>() {
-                override fun areItemsTheSame(oldItem: EventResponse.ListEventsItem, newItem: EventResponse.ListEventsItem) =
+            object : DiffUtil.ItemCallback<Event>() {
+                override fun areItemsTheSame(oldItem: Event, newItem: Event) =
                     oldItem.id == newItem.id
 
-                override fun areContentsTheSame(oldItem: EventResponse.ListEventsItem, newItem: EventResponse.ListEventsItem) =
+                override fun areContentsTheSame(oldItem: Event, newItem: Event) =
                     oldItem == newItem
             }
     }

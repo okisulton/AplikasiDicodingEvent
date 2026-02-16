@@ -14,15 +14,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import id.my.osa.dicodingfundamentalandroidsubs1.R
-import id.my.osa.dicodingfundamentalandroidsubs1.data.remote.response.DetailEventResponse
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.FragmentDetailBinding
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.model.Event
+import id.my.osa.dicodingfundamentalandroidsubs1.ui.ViewModelFactory
 
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding
 
-    private val viewModel: DetailViewModel by viewModels()
+    private val viewModel: DetailViewModel by viewModels { ViewModelFactory() }
     private val args: DetailFragmentArgs by navArgs()
 
     private var eventLink: String? = null
@@ -68,7 +69,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun displayEventDetail(event: DetailEventResponse.Event) {
+    private fun displayEventDetail(event: Event) {
         binding?.let { b ->
 
             val isShow = true

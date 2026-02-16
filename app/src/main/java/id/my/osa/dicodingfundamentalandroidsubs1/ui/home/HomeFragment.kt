@@ -14,13 +14,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.FragmentHomeBinding
+import id.my.osa.dicodingfundamentalandroidsubs1.ui.ViewModelFactory
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
 
-    private val homeViewModel by viewModels<HomeViewModel>()
+    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory() }
 
     private val autoScrollHandler = Handler(Looper.getMainLooper())
     private var currentPage = 0
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
 
     private fun setupBannerSlider() {
         val bannerAdapter = BannerAdapter { event ->
-            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id!!)
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id)
             findNavController().navigate(action)
         }
         binding?.vpUpcomingBanner?.adapter = bannerAdapter
@@ -115,7 +116,7 @@ class HomeFragment : Fragment() {
 
     private fun setupUpcomingEvents() {
         val upcomingEventsAdapter = EventAdapter { event ->
-            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id!!)
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id)
             findNavController().navigate(action)
         }
 
@@ -136,7 +137,7 @@ class HomeFragment : Fragment() {
 
     private fun setupFinishedEvents() {
         val finishedEventsAdapter = EventVerticalAdapter { event ->
-            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id!!)
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(event.id)
             findNavController().navigate(action)
         }
 
