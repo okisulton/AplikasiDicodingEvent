@@ -21,7 +21,11 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
 
-    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory() }
+    private val homeViewModel by viewModels<HomeViewModel> {
+        ViewModelFactory.getInstance(
+            requireActivity()
+        )
+    }
 
     private val autoScrollHandler = Handler(Looper.getMainLooper())
     private var currentPage = 0

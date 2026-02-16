@@ -19,7 +19,11 @@ class UpcomingFragment : Fragment() {
     private var _binding: FragmentUpcomingBinding? = null
     private val binding get() = _binding
 
-    private val viewModel: UpcomingViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: UpcomingViewModel by viewModels {
+        ViewModelFactory.getInstance(
+            requireActivity()
+        )
+    }
     private var eventAdapter: EventVerticalAdapter? = null
 
     override fun onCreateView(

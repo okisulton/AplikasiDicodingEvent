@@ -1,10 +1,8 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.DicodingFundamentalAndroidSubs1" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.DicodingFundamentalAndroidSubs1" parent="Theme.Material3.DynamicColors.Dark.NoActionBar">
         <!-- Draw content into system bars. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 </resources>

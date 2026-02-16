@@ -12,4 +12,12 @@
         android:id="@+id/finishedFragment"
         android:title="@string/finished"
         android:icon="@drawable/ic_finished_24" />
+    <item
+        android:id="@+id/favoriteFragment"
+        android:icon="@drawable/ic_favorite_24"
+        android:title="@string/favorite" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings_24"
+        android:title="@string/settings" />
 </menu>

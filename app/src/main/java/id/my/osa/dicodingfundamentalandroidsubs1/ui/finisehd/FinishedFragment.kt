@@ -19,7 +19,11 @@ class FinishedFragment : Fragment() {
     private var _binding: FragmentFinishedBinding? = null
     private val binding get() = _binding
 
-    private val viewModel: FinishedViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: FinishedViewModel by viewModels {
+        ViewModelFactory.getInstance(
+            requireActivity()
+        )
+    }
     private var eventAdapter: EventVerticalAdapter? = null
 
     override fun onCreateView(

@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import id.my.osa.dicodingfundamentalandroidsubs1.domain.model.Event
 import id.my.osa.dicodingfundamentalandroidsubs1.databinding.ItemEventVerticalBinding
+import id.my.osa.dicodingfundamentalandroidsubs1.domain.model.Event
 
 class EventVerticalAdapter(
     private val onItemClick: ((Event) -> Unit)? = null
@@ -35,10 +35,6 @@ class EventVerticalAdapter(
                 .load(event.imageLogo)
                 .into(binding.ivEvent)
         }
-    }
-
-    interface OnItemClickCallback {
-        fun onItemClicked(data: Event)
     }
 
     companion object {

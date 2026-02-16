@@ -23,7 +23,11 @@ class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding
 
-    private val viewModel: DetailViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: DetailViewModel by viewModels {
+        ViewModelFactory.getInstance(
+            requireActivity()
+        )
+    }
     private val args: DetailFragmentArgs by navArgs()
 
     private var eventLink: String? = null
@@ -42,6 +46,7 @@ class DetailFragment : Fragment() {
 
         setupToolbar()
         setupObservers()
+        setupFavoriteButton()
 
         // Fetch event detail using the event ID from navigation args
         viewModel.fetchEventDetail(args.eventId)
@@ -67,6 +72,23 @@ class DetailFragment : Fragment() {
                 showToast(message)
             }
         }
+
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            updateFavoriteIcon(isFavorite)
+        }
+    }
+
+    private fun setupFavoriteButton() {
+        binding?.fabFavorite?.setOnClickListener {
+            viewModel.toggleFavorite()
+        }
+    }
+
+    private fun updateFavoriteIcon(isFavorite: Boolean) {
+        binding?.fabFavorite?.setImageResource(
+            if (isFavorite) R.drawable.ic_favorite_filled_24
+            else R.drawable.ic_favorite_24
+        )
     }
 
     private fun displayEventDetail(event: Event) {
