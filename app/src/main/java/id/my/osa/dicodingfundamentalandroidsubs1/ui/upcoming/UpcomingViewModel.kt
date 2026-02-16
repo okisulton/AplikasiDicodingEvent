@@ -63,9 +63,5 @@ class UpcomingViewModel : ViewModel() {
             }
         })
     }
-
-    companion object {
-        private const val TAG = "UpcomingViewModel"
-    }
 }
 

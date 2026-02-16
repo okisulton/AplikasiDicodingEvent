@@ -62,9 +62,5 @@ class FinishedViewModel : ViewModel() {
             }
         })
     }
-
-    companion object {
-        private const val TAG = "FinishedViewModel"
-    }
 }
 
