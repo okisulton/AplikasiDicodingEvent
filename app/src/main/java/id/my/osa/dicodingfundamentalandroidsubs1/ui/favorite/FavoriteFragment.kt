@@ -28,7 +28,7 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
-        return binding?.root ?: throw IllegalStateException("Binding is not initialized")
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,12 +38,12 @@ class FavoriteFragment : Fragment() {
             val action = FavoriteFragmentDirections.actionFavoriteFragmentToDetailFragment(event.id)
             findNavController().navigate(action)
         }
-        binding?.rvFavoriteEvents?.adapter = adapter
+        binding.rvFavoriteEvents.adapter = adapter
 
         viewModel.favoriteEvents.observe(viewLifecycleOwner) { events ->
             adapter.submitList(events)
-            binding?.tvEmpty?.visibility = if (events.isEmpty()) View.VISIBLE else View.GONE
-            binding?.rvFavoriteEvents?.visibility =
+            binding.tvEmpty.visibility = if (events.isEmpty()) View.VISIBLE else View.GONE
+            binding.rvFavoriteEvents.visibility =
                 if (events.isEmpty()) View.GONE else View.VISIBLE
         }
     }

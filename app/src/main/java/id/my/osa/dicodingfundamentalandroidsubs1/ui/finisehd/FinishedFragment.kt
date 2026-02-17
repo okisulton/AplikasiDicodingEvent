@@ -32,7 +32,7 @@ class FinishedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFinishedBinding.inflate(inflater, container, false)
-        return binding?.root ?: throw IllegalStateException("Binding is not initialized")
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,14 +50,14 @@ class FinishedFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        binding?.rvFinishedEvents?.apply {
+        binding.rvFinishedEvents.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = eventAdapter
         }
     }
 
     private fun setupSearchView() {
-        binding?.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
                     viewModel.fetchFinishedEvents(it)
@@ -79,20 +79,20 @@ class FinishedFragment : Fragment() {
             eventAdapter?.submitList(events)
 
             if (events.isEmpty() && viewModel.isLoading.value == false) {
-                binding?.tvEmpty?.visibility = View.VISIBLE
-                binding?.rvFinishedEvents?.visibility = View.GONE
+                binding.tvEmpty.visibility = View.VISIBLE
+                binding.rvFinishedEvents.visibility = View.GONE
             } else {
-                binding?.tvEmpty?.visibility = View.GONE
-                binding?.rvFinishedEvents?.visibility = View.VISIBLE
+                binding.tvEmpty.visibility = View.GONE
+                binding.rvFinishedEvents.visibility = View.VISIBLE
             }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding?.progressBar?.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
 
             if (isLoading) {
-                binding?.rvFinishedEvents?.visibility = View.GONE
-                binding?.tvEmpty?.visibility = View.GONE
+                binding.rvFinishedEvents.visibility = View.GONE
+                binding.tvEmpty.visibility = View.GONE
             }
         }
 
