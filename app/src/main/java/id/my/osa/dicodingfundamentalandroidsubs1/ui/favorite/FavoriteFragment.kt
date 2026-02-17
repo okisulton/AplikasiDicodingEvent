@@ -14,7 +14,7 @@ import id.my.osa.dicodingfundamentalandroidsubs1.ui.home.EventVerticalAdapter
 class FavoriteFragment : Fragment() {
 
     private var _binding: FragmentFavoriteBinding? = null
-    private val binding get() = _binding
+    private val binding get() = requireNotNull(_binding)
 
     private val viewModel: FavoriteViewModel by viewModels {
         ViewModelFactory.getInstance(

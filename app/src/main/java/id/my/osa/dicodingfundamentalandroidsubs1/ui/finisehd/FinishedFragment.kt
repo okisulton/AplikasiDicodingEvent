@@ -17,7 +17,7 @@ import id.my.osa.dicodingfundamentalandroidsubs1.ui.home.EventVerticalAdapter
 class FinishedFragment : Fragment() {
 
     private var _binding: FragmentFinishedBinding? = null
-    private val binding get() = _binding
+    private val binding get() = requireNotNull(_binding)
 
     private val viewModel: FinishedViewModel by viewModels {
         ViewModelFactory.getInstance(

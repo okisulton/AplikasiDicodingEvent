@@ -17,7 +17,7 @@ import id.my.osa.dicodingfundamentalandroidsubs1.ui.home.EventVerticalAdapter
 class UpcomingFragment : Fragment() {
 
     private var _binding: FragmentUpcomingBinding? = null
-    private val binding get() = _binding
+    private val binding get() = requireNotNull(_binding)
 
     private val viewModel: UpcomingViewModel by viewModels {
         ViewModelFactory.getInstance(
@@ -32,7 +32,7 @@ class UpcomingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUpcomingBinding.inflate(inflater, container, false)
-        return binding?.root ?: throw IllegalStateException("Binding is not initialized")
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,14 +50,14 @@ class UpcomingFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        binding?.rvUpcomingEvents?.apply {
+        binding.rvUpcomingEvents.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = eventAdapter
         }
     }
 
     private fun setupSearchView() {
-        binding?.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
                     viewModel.fetchUpcomingEvents(it)
@@ -80,21 +80,21 @@ class UpcomingFragment : Fragment() {
 
             // Show/hide empty state
             if (events.isEmpty() && viewModel.isLoading.value == false) {
-                binding?.tvEmpty?.visibility = View.VISIBLE
-                binding?.rvUpcomingEvents?.visibility = View.GONE
+                binding.tvEmpty.visibility = View.VISIBLE
+                binding.rvUpcomingEvents.visibility = View.GONE
             } else {
-                binding?.tvEmpty?.visibility = View.GONE
-                binding?.rvUpcomingEvents?.visibility = View.VISIBLE
+                binding.tvEmpty.visibility = View.GONE
+                binding.rvUpcomingEvents.visibility = View.VISIBLE
             }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding?.progressBar?.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
 
             // Hide RecyclerView and empty state while loading
             if (isLoading) {
-                binding?.rvUpcomingEvents?.visibility = View.GONE
-                binding?.tvEmpty?.visibility = View.GONE
+                binding.rvUpcomingEvents.visibility = View.GONE
+                binding.tvEmpty.visibility = View.GONE
             }
         }
 

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
-    private val binding get() = _binding
+    private val binding get() = requireNotNull(_binding)
 
     private val viewModel: SettingsViewModel by viewModels {
         ViewModelFactory.getInstance(
@@ -42,7 +42,7 @@ class SettingsFragment : Fragment() {
                     "Notification permission is required for daily reminders",
                     Toast.LENGTH_SHORT
                 ).show()
-                binding?.switchReminder?.isChecked = false
+                binding.switchReminder.isChecked = false
             }
         }
 
@@ -52,7 +52,7 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        return binding?.root ?: throw IllegalStateException("Binding is not initialized")
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,21 +64,21 @@ class SettingsFragment : Fragment() {
 
     private fun setupThemeSwitch() {
         viewModel.themeSetting.observe(viewLifecycleOwner) { isDarkMode ->
-            binding?.switchTheme?.isChecked = isDarkMode
+            binding.switchTheme.isChecked = isDarkMode
             AppCompatDelegate.setDefaultNightMode(
                 if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
                 else AppCompatDelegate.MODE_NIGHT_NO
             )
         }
 
-        binding?.switchTheme?.setOnCheckedChangeListener { _, isChecked ->
+        binding.switchTheme.setOnCheckedChangeListener { _, isChecked ->
             viewModel.saveThemeSetting(isChecked)
         }
     }
 
     private fun setupReminderSwitch() {
         viewModel.reminderSetting.observe(viewLifecycleOwner) { isReminderActive ->
-            binding?.switchReminder?.isChecked = isReminderActive
+            binding.switchReminder.isChecked = isReminderActive
             if (isReminderActive) {
                 scheduleReminder()
             } else {
@@ -86,7 +86,7 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        binding?.switchReminder?.setOnCheckedChangeListener { _, isChecked ->
+        binding.switchReminder.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     if (ContextCompat.checkSelfPermission(

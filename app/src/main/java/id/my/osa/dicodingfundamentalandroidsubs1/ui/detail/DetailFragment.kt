@@ -21,7 +21,7 @@ import id.my.osa.dicodingfundamentalandroidsubs1.ui.ViewModelFactory
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
-    private val binding get() = _binding
+    private val binding get() = requireNotNull(_binding)
 
     private val viewModel: DetailViewModel by viewModels {
         ViewModelFactory.getInstance(
@@ -38,7 +38,7 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
-        return binding?.root ?: throw IllegalStateException("Binding is not initialized")
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        binding?.toolbar?.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
     }
@@ -64,7 +64,7 @@ class DetailFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding?.progressBar?.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
@@ -79,20 +79,20 @@ class DetailFragment : Fragment() {
     }
 
     private fun setupFavoriteButton() {
-        binding?.fabFavorite?.setOnClickListener {
+        binding.fabFavorite.setOnClickListener {
             viewModel.toggleFavorite()
         }
     }
 
     private fun updateFavoriteIcon(isFavorite: Boolean) {
-        binding?.fabFavorite?.setImageResource(
+        binding.fabFavorite.setImageResource(
             if (isFavorite) R.drawable.ic_favorite_filled_24
             else R.drawable.ic_favorite_24
         )
     }
 
     private fun displayEventDetail(event: Event) {
-        binding?.let { b ->
+        binding.let { b ->
 
             val isShow = true
             var scrollRange = -1
@@ -102,9 +102,9 @@ class DetailFragment : Fragment() {
                     scrollRange = appBarLayout.totalScrollRange
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    binding?.collapsingToolbar?.title = viewModel.eventDetail.value?.name
+                    binding.collapsingToolbar.title = viewModel.eventDetail.value?.name
                 } else if (isShow) {
-                    binding?.collapsingToolbar?.title = " "
+                    binding.collapsingToolbar.title = " "
                 }
             }
 
@@ -137,6 +137,7 @@ class DetailFragment : Fragment() {
                     b.fabRegister.isEnabled = false
                     b.fabRegister.text = getString(R.string.quota_full)
                 }
+
                 remainingQuota < 100 -> {
                     b.tvEventQuota.setTextColor(
                         resources.getColor(
@@ -145,6 +146,7 @@ class DetailFragment : Fragment() {
                         )
                     )
                 }
+
                 else -> {
                     b.tvEventQuota.setTextColor(
                         resources.getColor(
